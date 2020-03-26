@@ -2,6 +2,9 @@
     <div class="customers container">
       <Alert v-if="alert" v-bind:message="alert"></Alert>
         <h1 class="page-header">用户管理系统</h1>
+        <!-- v-model 取代input监听change事件 -->
+        <input type="text" class="form-control" placeholder="搜索" v-model="filterInput">
+        <br>
         <table class="table table-striped">
           <thead>
             <tr>
@@ -12,7 +15,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="customer in customers">
+            <tr v-for="customer in filterBy(customers,filterInput)">
               <td>{{customer.name}}</td>
               <td>{{customer.phone}}</td>
               <td>{{customer.email}}</td>
@@ -31,7 +34,8 @@
     data () {
       return {
         customers:[],
-        alert: ""
+        alert: "",
+        filterInput: ""
       }
     },
     methods:{
@@ -41,6 +45,12 @@
             //console.log(response);
             this.customers = response.body;
           })
+      },
+      filterBy(customers,value){
+        // filter 遍历整个数组
+        return customers.filter(function(customer){
+          return customer.name.match(value); //进行匹配
+        })
       }
     },
     created(){
